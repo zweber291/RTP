@@ -1,27 +1,16 @@
 package com.zweber.rtp;
 
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class Main extends JavaPlugin
-{
+public class Main extends JavaPlugin {
 
-    FileConfiguration config;
-    public static Main plugin;
-
-    public Main()
-    {
-        config = getConfig();
+    public void onEnable() {
+        getLogger().info("Enabling RTP"); // Sends message to console saying the plugin was enabled
+        getCommand("rtp").setExecutor(new commandRtp()); // Associates /rtp command with the commandRtp class
     }
 
-    public void onEnable()
-    {
-        getLogger().info("Enabling RTP");
-        getCommand("rtp").setExecutor(new commandRtp());
+    public void onDisable() {
+        getLogger().info("Disabling RTP"); // Sends message to console saying the plugin was disabled
     }
-
-    public void onDisable()
-    {
-        getLogger().info("Disabling RTP");
-    }
+    
 }
