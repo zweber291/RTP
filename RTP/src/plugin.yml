@@ -1,0 +1,10 @@
+main: com.zweber.rtp.Main
+name: RTP
+version: 1.0
+author: smack17
+description: Randomly teleports player within a certain amount of blocks from where they stand
+commands:
+    rtp:
+        description: Teleport command
+        usage: /rtp
+        permission: rtp.rtp
