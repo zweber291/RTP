@@ -2,7 +2,6 @@ package com.smack17.rtp;
 
 import java.util.Random;
 import org.bukkit.*;
-import org.bukkit.block.Biome;
 import org.bukkit.command.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -25,33 +24,44 @@ public class commandRtp implements CommandExecutor {
         Location locMinPlus = new Location(player.getWorld(), player.getLocation().getX() - (double)randomX, player.getWorld().getHighestBlockYAt((int)player.getLocation().getX() - randomX, (int)player.getLocation().getZ() + randomZ) + 2, player.getLocation().getZ() + (double)randomZ);
         Location locMinMin = new Location(player.getWorld(), player.getLocation().getX() - (double)randomX, player.getWorld().getHighestBlockYAt((int)player.getLocation().getX() - randomX, (int)player.getLocation().getZ() - randomZ) + 2, player.getLocation().getZ() - (double)randomZ);
         
-        // Choosing which of the 4 locations to use. Also checks for ocean biome (unsure if it work yet)
+        // Gets locations 2 blocks below one of the 4 locations (to test if its water)
+        Location locPlusPlusBelow = new Location(locPlusPlus.getWorld(), locPlusPlus.getX(), locPlusPlus.getY()-2, locPlusPlus.getZ());
+        Location locPlusMinBelow = new Location(locPlusMin.getWorld(), locPlusMin.getX(), locPlusMin.getY()-2, locPlusMin.getZ());
+        Location locMinPlusBelow = new Location(locMinPlus.getWorld(), locMinPlus.getX(), locMinPlus.getY()-2, locMinPlus.getZ());
+        Location locMinMinBelow = new Location(locMinMin.getWorld(), locMinMin.getX(), locMinMin.getY()-2, locMinMin.getZ());
+        
+        // Checking if end location is water, and if so, pick a new location (may not work right now)
         switch(posOrNeg) {
         case 1:
-            if(locPlusPlus.getWorld().getBiome(locPlusPlus.getBlockX(), locPlusPlus.getBlockZ()) == Biome.COLD_OCEAN || locPlusPlus.getWorld().getBiome(locPlusPlus.getBlockX(), locPlusPlus.getBlockZ()) == Biome.DEEP_COLD_OCEAN || locPlusPlus.getWorld().getBiome(locPlusPlus.getBlockX(), locPlusPlus.getBlockZ()) == Biome.DEEP_FROZEN_OCEAN || locPlusPlus.getWorld().getBiome(locPlusPlus.getBlockX(), locPlusPlus.getBlockZ()) == Biome.DEEP_LUKEWARM_OCEAN || locPlusPlus.getWorld().getBiome(locPlusPlus.getBlockX(), locPlusPlus.getBlockZ()) == Biome.DEEP_OCEAN || locPlusPlus.getWorld().getBiome(locPlusPlus.getBlockX(), locPlusPlus.getBlockZ()) == Biome.DEEP_WARM_OCEAN || locPlusPlus.getWorld().getBiome(locPlusPlus.getBlockX(), locPlusPlus.getBlockZ()) == Biome.FROZEN_OCEAN || locPlusPlus.getWorld().getBiome(locPlusPlus.getBlockX(), locPlusPlus.getBlockZ()) == Biome.LUKEWARM_OCEAN || locPlusPlus.getWorld().getBiome(locPlusPlus.getBlockX(), locPlusPlus.getBlockZ()) == Biome.OCEAN || locPlusPlus.getWorld().getBiome(locPlusPlus.getBlockX(), locPlusPlus.getBlockZ()) == Biome.WARM_OCEAN) {
+            if(locPlusPlusBelow.getBlock().getType() == Material.WATER) {
+            	System.out.println("Water found. Finding new location...");
                 locPlusPlus = getLocation(player);
             }
             return locPlusPlus;
 
         case 2:
-            if(locPlusMin.getWorld().getBiome(locPlusMin.getBlockX(), locPlusMin.getBlockZ()) == Biome.COLD_OCEAN || locPlusMin.getWorld().getBiome(locPlusMin.getBlockX(), locPlusMin.getBlockZ()) == Biome.DEEP_COLD_OCEAN || locPlusMin.getWorld().getBiome(locPlusMin.getBlockX(), locPlusMin.getBlockZ()) == Biome.DEEP_FROZEN_OCEAN || locPlusMin.getWorld().getBiome(locPlusMin.getBlockX(), locPlusMin.getBlockZ()) == Biome.DEEP_LUKEWARM_OCEAN || locPlusMin.getWorld().getBiome(locPlusMin.getBlockX(), locPlusMin.getBlockZ()) == Biome.DEEP_OCEAN || locPlusMin.getWorld().getBiome(locPlusMin.getBlockX(), locPlusMin.getBlockZ()) == Biome.DEEP_WARM_OCEAN || locPlusMin.getWorld().getBiome(locPlusMin.getBlockX(), locPlusMin.getBlockZ()) == Biome.FROZEN_OCEAN || locPlusMin.getWorld().getBiome(locPlusMin.getBlockX(), locPlusMin.getBlockZ()) == Biome.LUKEWARM_OCEAN || locPlusMin.getWorld().getBiome(locPlusMin.getBlockX(), locPlusMin.getBlockZ()) == Biome.OCEAN || locPlusMin.getWorld().getBiome(locPlusMin.getBlockX(), locPlusMin.getBlockZ()) == Biome.WARM_OCEAN) {
+            if(locPlusMinBelow.getBlock().getType() == Material.WATER) {
+            	System.out.println("Water found. Finding new location...");
                 locPlusMin = getLocation(player);
             }
             return locPlusMin;
 
         case 3:
-            if(locMinPlus.getWorld().getBiome(locMinPlus.getBlockX(), locMinPlus.getBlockZ()) == Biome.COLD_OCEAN || locMinPlus.getWorld().getBiome(locMinPlus.getBlockX(), locMinPlus.getBlockZ()) == Biome.DEEP_COLD_OCEAN || locMinPlus.getWorld().getBiome(locMinPlus.getBlockX(), locMinPlus.getBlockZ()) == Biome.DEEP_FROZEN_OCEAN || locMinPlus.getWorld().getBiome(locMinPlus.getBlockX(), locMinPlus.getBlockZ()) == Biome.DEEP_LUKEWARM_OCEAN || locMinPlus.getWorld().getBiome(locMinPlus.getBlockX(), locMinPlus.getBlockZ()) == Biome.DEEP_OCEAN || locMinPlus.getWorld().getBiome(locMinPlus.getBlockX(), locMinPlus.getBlockZ()) == Biome.DEEP_WARM_OCEAN || locMinPlus.getWorld().getBiome(locMinPlus.getBlockX(), locMinPlus.getBlockZ()) == Biome.FROZEN_OCEAN || locMinPlus.getWorld().getBiome(locMinPlus.getBlockX(), locMinPlus.getBlockZ()) == Biome.LUKEWARM_OCEAN || locMinPlus.getWorld().getBiome(locMinPlus.getBlockX(), locMinPlus.getBlockZ()) == Biome.OCEAN || locMinPlus.getWorld().getBiome(locMinPlus.getBlockX(), locMinPlus.getBlockZ()) == Biome.WARM_OCEAN) {
+            if(locMinPlusBelow.getBlock().getType() == Material.WATER) {
+            	System.out.println("Water found. Finding new location...");
                 locMinPlus = getLocation(player);
             }
             return locMinPlus;
 
         case 4:
-            if(locMinMin.getWorld().getBiome(locMinMin.getBlockX(), locMinMin.getBlockZ()) == Biome.COLD_OCEAN || locMinMin.getWorld().getBiome(locMinMin.getBlockX(), locMinMin.getBlockZ()) == Biome.DEEP_COLD_OCEAN || locMinMin.getWorld().getBiome(locMinMin.getBlockX(), locMinMin.getBlockZ()) == Biome.DEEP_FROZEN_OCEAN || locMinMin.getWorld().getBiome(locMinMin.getBlockX(), locMinMin.getBlockZ()) == Biome.DEEP_LUKEWARM_OCEAN || locMinMin.getWorld().getBiome(locMinMin.getBlockX(), locMinMin.getBlockZ()) == Biome.DEEP_OCEAN || locMinMin.getWorld().getBiome(locMinMin.getBlockX(), locMinMin.getBlockZ()) == Biome.DEEP_WARM_OCEAN || locMinMin.getWorld().getBiome(locMinMin.getBlockX(), locMinMin.getBlockZ()) == Biome.FROZEN_OCEAN || locMinMin.getWorld().getBiome(locMinMin.getBlockX(), locMinMin.getBlockZ()) == Biome.LUKEWARM_OCEAN || locMinMin.getWorld().getBiome(locMinMin.getBlockX(), locMinMin.getBlockZ()) == Biome.OCEAN || locMinMin.getWorld().getBiome(locMinMin.getBlockX(), locMinMin.getBlockZ()) == Biome.WARM_OCEAN) {
+            if(locMinMinBelow.getBlock().getType() == Material.WATER) {
+            	System.out.println("Water found. Finding new location...");
                 locMinMin = getLocation(player);
             }
             return locMinMin;
         default:
-            if(locPlusPlus.getWorld().getBiome(locPlusPlus.getBlockX(), locPlusPlus.getBlockZ()) == Biome.COLD_OCEAN || locPlusPlus.getWorld().getBiome(locPlusPlus.getBlockX(), locPlusPlus.getBlockZ()) == Biome.DEEP_COLD_OCEAN || locPlusPlus.getWorld().getBiome(locPlusPlus.getBlockX(), locPlusPlus.getBlockZ()) == Biome.DEEP_FROZEN_OCEAN || locPlusPlus.getWorld().getBiome(locPlusPlus.getBlockX(), locPlusPlus.getBlockZ()) == Biome.DEEP_LUKEWARM_OCEAN || locPlusPlus.getWorld().getBiome(locPlusPlus.getBlockX(), locPlusPlus.getBlockZ()) == Biome.DEEP_OCEAN || locPlusPlus.getWorld().getBiome(locPlusPlus.getBlockX(), locPlusPlus.getBlockZ()) == Biome.DEEP_WARM_OCEAN || locPlusPlus.getWorld().getBiome(locPlusPlus.getBlockX(), locPlusPlus.getBlockZ()) == Biome.FROZEN_OCEAN || locPlusPlus.getWorld().getBiome(locPlusPlus.getBlockX(), locPlusPlus.getBlockZ()) == Biome.LUKEWARM_OCEAN || locPlusPlus.getWorld().getBiome(locPlusPlus.getBlockX(), locPlusPlus.getBlockZ()) == Biome.OCEAN || locPlusPlus.getWorld().getBiome(locPlusPlus.getBlockX(), locPlusPlus.getBlockZ()) == Biome.WARM_OCEAN) {
+            if(locPlusPlusBelow.getBlock().getType() == Material.WATER) {
+            	System.out.println("Water found. Finding new location...");
                 locPlusPlus = getLocation(player);
             }
             return locPlusPlus;

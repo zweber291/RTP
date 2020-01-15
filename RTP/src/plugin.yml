@@ -1,6 +1,6 @@
 main: com.smack17.rtp.Main
 name: RTP
-version: 1.1
+version: 1.3
 author: smack17
 description: Randomly teleports player within a certain amount of blocks from where they stand
 commands:
