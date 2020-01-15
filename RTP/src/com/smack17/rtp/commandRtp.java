@@ -1,9 +1,10 @@
-package com.zweber.rtp;
+package com.smack17.rtp;
 
 import java.util.Random;
 import org.bukkit.*;
 import org.bukkit.block.Biome;
 import org.bukkit.command.*;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
@@ -12,10 +13,11 @@ public class commandRtp implements CommandExecutor {
 	// Gets new location for player to teleport to
     public Location getLocation(Player player) {
         Random r = new Random();
-        int radius = 1000;
-        int randomX = r.nextInt(radius);
+        FileConfiguration config = Main.plugin.getConfig();
+        int radius = config.getInt("distance"); // Gets distance value from config
+        int randomX = r.nextInt(radius); // Gets random value within the radius set in the config
         int randomZ = r.nextInt(radius);
-        int posOrNeg = r.nextInt(4);
+        int posOrNeg = r.nextInt(4); // Picks one of the locations below
         
         // Locations on an x y plain
         Location locPlusPlus = new Location(player.getWorld(), player.getLocation().getX() + (double)randomX, player.getWorld().getHighestBlockYAt((int)player.getLocation().getX() + randomX, (int)player.getLocation().getZ() + randomZ) + 2, player.getLocation().getZ() + (double)randomZ);
@@ -23,7 +25,7 @@ public class commandRtp implements CommandExecutor {
         Location locMinPlus = new Location(player.getWorld(), player.getLocation().getX() - (double)randomX, player.getWorld().getHighestBlockYAt((int)player.getLocation().getX() - randomX, (int)player.getLocation().getZ() + randomZ) + 2, player.getLocation().getZ() + (double)randomZ);
         Location locMinMin = new Location(player.getWorld(), player.getLocation().getX() - (double)randomX, player.getWorld().getHighestBlockYAt((int)player.getLocation().getX() - randomX, (int)player.getLocation().getZ() - randomZ) + 2, player.getLocation().getZ() - (double)randomZ);
         
-        // Choosing which of the 4 locations to use. Also checks for ocean biome (doesnt work yet)
+        // Choosing which of the 4 locations to use. Also checks for ocean biome (unsure if it work yet)
         switch(posOrNeg) {
         case 1:
             if(locPlusPlus.getWorld().getBiome(locPlusPlus.getBlockX(), locPlusPlus.getBlockZ()) == Biome.COLD_OCEAN || locPlusPlus.getWorld().getBiome(locPlusPlus.getBlockX(), locPlusPlus.getBlockZ()) == Biome.DEEP_COLD_OCEAN || locPlusPlus.getWorld().getBiome(locPlusPlus.getBlockX(), locPlusPlus.getBlockZ()) == Biome.DEEP_FROZEN_OCEAN || locPlusPlus.getWorld().getBiome(locPlusPlus.getBlockX(), locPlusPlus.getBlockZ()) == Biome.DEEP_LUKEWARM_OCEAN || locPlusPlus.getWorld().getBiome(locPlusPlus.getBlockX(), locPlusPlus.getBlockZ()) == Biome.DEEP_OCEAN || locPlusPlus.getWorld().getBiome(locPlusPlus.getBlockX(), locPlusPlus.getBlockZ()) == Biome.DEEP_WARM_OCEAN || locPlusPlus.getWorld().getBiome(locPlusPlus.getBlockX(), locPlusPlus.getBlockZ()) == Biome.FROZEN_OCEAN || locPlusPlus.getWorld().getBiome(locPlusPlus.getBlockX(), locPlusPlus.getBlockZ()) == Biome.LUKEWARM_OCEAN || locPlusPlus.getWorld().getBiome(locPlusPlus.getBlockX(), locPlusPlus.getBlockZ()) == Biome.OCEAN || locPlusPlus.getWorld().getBiome(locPlusPlus.getBlockX(), locPlusPlus.getBlockZ()) == Biome.WARM_OCEAN) {
@@ -68,10 +70,10 @@ public class commandRtp implements CommandExecutor {
                 world.getChunkAt((int)tpLocation.getX(), (int)tpLocation.getZ()).load(); // Loads chunk that the player will teleport to
                 player.setVelocity(new Vector(0, 0, 0)); // Prevent fall damage
                 player.teleport(tpLocation); // Teleport player
-                player.sendMessage("\2478[\247bNo\2477-\247bNamed\2477 \247bOrg\2478] \247aYou have been teleported!"); // Notify player that they have teleported
+                player.sendMessage("\2478[\247bRTP\2478] \247aYou have been teleported!"); // Notify player that they have teleported
             } 
             else {
-                player.sendMessage("\2478[\247bNo\2477-\247bNamed\2477 \247bOrg\2478] \247cYou do not have permission to use this!"); // Notify player that they dont have permission
+                player.sendMessage("\2478[\247bRTP\2478] \247cYou do not have permission to use this!"); // Notify player that they dont have permission
             }
         }
         return true;
