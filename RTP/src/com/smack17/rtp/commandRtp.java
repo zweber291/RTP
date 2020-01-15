@@ -10,7 +10,7 @@ import org.bukkit.util.Vector;
 public class commandRtp implements CommandExecutor {
 
 	// Gets new location for player to teleport to
-    public Location getLocation(Player player) {
+    public Location getNewLocation(Player player) {
         Random r = new Random();
         FileConfiguration config = Main.plugin.getConfig();
         int radius = config.getInt("distance"); // Gets distance value from config
@@ -19,54 +19,45 @@ public class commandRtp implements CommandExecutor {
         int posOrNeg = r.nextInt(4); // Picks one of the locations below
         
         // Locations on an x y plain
-        Location locPlusPlus = new Location(player.getWorld(), player.getLocation().getX() + (double)randomX, player.getWorld().getHighestBlockYAt((int)player.getLocation().getX() + randomX, (int)player.getLocation().getZ() + randomZ) + 2, player.getLocation().getZ() + (double)randomZ);
-        Location locPlusMin = new Location(player.getWorld(), player.getLocation().getX() + (double)randomX, player.getWorld().getHighestBlockYAt((int)player.getLocation().getX() + randomX, (int)player.getLocation().getZ() - randomZ) + 2, player.getLocation().getZ() - (double)randomZ);
-        Location locMinPlus = new Location(player.getWorld(), player.getLocation().getX() - (double)randomX, player.getWorld().getHighestBlockYAt((int)player.getLocation().getX() - randomX, (int)player.getLocation().getZ() + randomZ) + 2, player.getLocation().getZ() + (double)randomZ);
-        Location locMinMin = new Location(player.getWorld(), player.getLocation().getX() - (double)randomX, player.getWorld().getHighestBlockYAt((int)player.getLocation().getX() - randomX, (int)player.getLocation().getZ() - randomZ) + 2, player.getLocation().getZ() - (double)randomZ);
+        Location locPlusPlus = new Location(player.getWorld(), player.getLocation().getX() + (double)randomX, player.getWorld().getHighestBlockYAt((int)player.getLocation().getX() + randomX, (int)player.getLocation().getZ() + randomZ), player.getLocation().getZ() + (double)randomZ);
+        Location locPlusMin = new Location(player.getWorld(), player.getLocation().getX() + (double)randomX, player.getWorld().getHighestBlockYAt((int)player.getLocation().getX() + randomX, (int)player.getLocation().getZ() - randomZ), player.getLocation().getZ() - (double)randomZ);
+        Location locMinPlus = new Location(player.getWorld(), player.getLocation().getX() - (double)randomX, player.getWorld().getHighestBlockYAt((int)player.getLocation().getX() - randomX, (int)player.getLocation().getZ() + randomZ), player.getLocation().getZ() + (double)randomZ);
+        Location locMinMin = new Location(player.getWorld(), player.getLocation().getX() - (double)randomX, player.getWorld().getHighestBlockYAt((int)player.getLocation().getX() - randomX, (int)player.getLocation().getZ() - randomZ), player.getLocation().getZ() - (double)randomZ);
         
-        // Gets locations 2 blocks below one of the 4 locations (to test if its water)
-        Location locPlusPlusBelow = new Location(locPlusPlus.getWorld(), locPlusPlus.getX(), locPlusPlus.getY()-2, locPlusPlus.getZ());
-        Location locPlusMinBelow = new Location(locPlusMin.getWorld(), locPlusMin.getX(), locPlusMin.getY()-2, locPlusMin.getZ());
-        Location locMinPlusBelow = new Location(locMinPlus.getWorld(), locMinPlus.getX(), locMinPlus.getY()-2, locMinPlus.getZ());
-        Location locMinMinBelow = new Location(locMinMin.getWorld(), locMinMin.getX(), locMinMin.getY()-2, locMinMin.getZ());
-        
-        // Checking if end location is water, and if so, pick a new location (may not work right now)
+        // Choose what direction player will tp in and check if it is water. If so, will pick a new location
         switch(posOrNeg) {
         case 1:
-            if(locPlusPlusBelow.getBlock().getType() == Material.WATER) {
-            	System.out.println("Water found. Finding new location...");
-                locPlusPlus = getLocation(player);
-            }
-            return locPlusPlus;
-
+        	while(locPlusPlus.getBlock().getType() == Material.WATER) {
+            	player.sendMessage("[DEBUG] Nonsolid found. Getting new location...");
+        		locPlusPlus = getNewLocation(player);
+        	}
+        		return locPlusPlus;
         case 2:
-            if(locPlusMinBelow.getBlock().getType() == Material.WATER) {
-            	System.out.println("Water found. Finding new location...");
-                locPlusMin = getLocation(player);
-            }
-            return locPlusMin;
-
+        	while(locPlusMin.getBlock().getType() == Material.WATER) {
+            	player.sendMessage("[DEBUG] Nonsolid found. Getting new location...");
+        		locPlusMin = getNewLocation(player);
+        	}
+        		return locPlusMin;
         case 3:
-            if(locMinPlusBelow.getBlock().getType() == Material.WATER) {
-            	System.out.println("Water found. Finding new location...");
-                locMinPlus = getLocation(player);
-            }
-            return locMinPlus;
-
+        	while(locMinPlus.getBlock().getType() == Material.WATER) {
+            	player.sendMessage("[DEBUG] Nonsolid found. Getting new location...");
+        		locMinPlus = getNewLocation(player);
+        	}
+        		return locMinPlus;
         case 4:
-            if(locMinMinBelow.getBlock().getType() == Material.WATER) {
-            	System.out.println("Water found. Finding new location...");
-                locMinMin = getLocation(player);
-            }
-            return locMinMin;
+        	while(locMinMin.getBlock().getType() == Material.WATER) {
+            	player.sendMessage("[DEBUG] Nonsolid found. Getting new location...");
+        		locMinMin = getNewLocation(player);
+        	}
+        		return locMinMin;
         default:
-            if(locPlusPlusBelow.getBlock().getType() == Material.WATER) {
-            	System.out.println("Water found. Finding new location...");
-                locPlusPlus = getLocation(player);
-            }
-            return locPlusPlus;
+        	while(locPlusPlus.getBlock().getType() == Material.WATER) {
+            	player.sendMessage("[DEBUG] Nonsolid found. Getting new location...");
+        		locPlusPlus = getNewLocation(player);
+        	}
+        		return locPlusPlus;
+        	}
         }
-    }
 
     // Sends player to the location piched in getLocation()
     public boolean onCommand(CommandSender sender, Command command, String label, String args[]) {
@@ -75,7 +66,7 @@ public class commandRtp implements CommandExecutor {
             Player player = (Player)sender;
             // Checks if player has the correct permissions
             if(player.hasPermission("rtp.rtp")) {
-                Location tpLocation = getLocation(player); // Get players current location
+                Location tpLocation = getNewLocation(player); // Get teleport location
                 World world = player.getWorld(); // Get world the player is in
                 world.getChunkAt((int)tpLocation.getX(), (int)tpLocation.getZ()).load(); // Loads chunk that the player will teleport to
                 player.setVelocity(new Vector(0, 0, 0)); // Prevent fall damage
